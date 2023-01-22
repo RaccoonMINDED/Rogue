@@ -135,6 +135,23 @@ void removePointer(){
     addSpacingLeft(1);
     addSpacingUp(1);
 }
+void winScreen(){
+  ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
+    consoleClear();
+    addSpacingUp(ws.ws_row/2-3);
+    addSpacingLeft(ws.ws_col/2-18);
+printf(" ▄· ▄▌      ▄• ▄▌    ▄▄▌ ▐ ▄▌▪   ▐ ▄ \n");
+    addSpacingLeft(ws.ws_col/2-18);
+printf("▐█▪██▌▪     █▪██▌    ██· █▌▐███ •█▌▐█\n");
+    addSpacingLeft(ws.ws_col/2-18);
+printf("▐█▌▐█▪ ▄█▀▄ █▌▐█▌    ██▪▐█▐▐▌▐█·▐█▐▐▌\n");
+    addSpacingLeft(ws.ws_col/2-18);
+printf(" ▐█▀·.▐█▌.▐▌▐█▄█▌    ▐█▌██▐█▌▐█▌██▐█▌\n");
+    addSpacingLeft(ws.ws_col/2-18);
+printf("  ▀ •  ▀█▄▀▪ ▀▀▀      ▀▀▀▀ ▀▪▀▀▀▀▀ █▪\n");
+sleep(3);
+return;
+}
 
 void gameOver(){
     ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
@@ -762,18 +779,30 @@ int add[3];
 int val[3];
 int input;
 //1 - +DMG
-add[0] = 10;
+add[0] = 5;
 //2 - +HP
 add[1] = 25;
 //3 - +LevelProgress
 add[2] = 4;
 char shopItems[3][20] = {"Dmg","Hp","Xp"};
+
 while(1){
-val[0]=5 * player.DMG/add[0];
-val[1]=2 * player.HP/add[1];
-val[2]=10 * player.LevelProgress/add[2];
 consoleClear();
 isConsoleSizeRight();
+if(player.LevelProgress>player.LevelMinReq){
+        player.HP+=20;
+        player.DMG+=5;
+        player.LevelProgress-=player.LevelMinReq;
+        player.LevelMinReq+=player.LevelMinReq/2;
+        player.Level++;
+    }
+    addSpacingUp(1);
+    addSpacingLeft(3);
+    printf("Hp=%d/100       Dmg=%d      Gold=%d     lvl=%d(%d/%d)",player.HP,player.DMG,player.Gold,player.Level,player.LevelProgress,player.LevelMinReq);
+val[0]=5 * player.DMG/add[0];
+val[1]=5;
+val[2]=5 * player.Level;
+
 ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 addSpacingUp(ws.ws_row/2-6);
 addSpacingLeft(ws.ws_col/3);
@@ -782,11 +811,11 @@ printf("Gold = %d\n\n\n",player.Gold);
 printf("%s\n",normalCl);
 for(int i = 0; i<3; i++){
 addSpacingLeft(ws.ws_col/3);
+if(val[i]<=player.Gold){
+printf("%s",greenCl);
+}
 if(i == chosen){
 printf("%s",blueCl);
-}
-if(val[i]<player.Gold){
-printf("%s",greenCl);
 }
 printf("+%d %s ",add[i],shopItems[i]);
 printf("(%dgold)",val[i]);
@@ -794,23 +823,24 @@ printf("%s\n",normalCl);
 }
 drawRect(ws.ws_row/2,ws.ws_col/2,ws.ws_row/4,ws.ws_col/4);
 input = getCharFork();
+inputStart:
 switch(input){
             case 10:
                 switch(chosen){
-                    case 1:
-                        if(val[0]<player.Gold){
+                    case 0:
+                        if(val[0]<=player.Gold){
                             player.Gold -= val[0];
                             player.DMG += add[0];
                         }
                         break;
-                    case 2:
-                        if(val[1]<player.Gold){
+                    case 1:
+                        if(val[1]<=player.Gold){
                             player.Gold -= val[1];
                             player.HP += add[1];
                         }
                         break;
-                    case 3:
-                        if(val[2]<player.Gold){
+                    case 2:
+                        if(val[2]<=player.Gold){
                             player.Gold -= val[2];
                             player.LevelProgress += add[2];
                         }
@@ -818,9 +848,28 @@ switch(input){
 
                 }
                 break;
+                //s/S down
+            case 83:
+                input = 115;
+                goto inputStart;
+                break;
+            case 115:
+                input = 100;
+                goto inputStart;
+                break;
+                //w/W up
+            case 87:
+                input = 119;
+                goto inputStart;
+                break;
+            case 119:
+                input = 97;
+                goto inputStart;
+                break;
                 //a/A left
             case 65:
                 input = 97;
+                goto inputStart;
                 break;
             case 97:
                 if (tickCount>fps*5){
@@ -834,6 +883,7 @@ switch(input){
                 //d/D right
             case 68:
                 input = 100;
+                goto inputStart;
                 break;
             case 100:
                 if (tickCount>fps*5){
@@ -847,6 +897,7 @@ switch(input){
                 //exit e/E
             case 69:
                 input = 101;
+                goto inputStart;
                 break;
             case 101:
                 saveGame(1);
@@ -969,7 +1020,7 @@ void playerMove(int xy, int direction, int roomNum){
                         saveGame(1);
                         }
                         else{
-                        // winScreen();
+                        winScreen();
                         saveGame(0);
                         //saveStats();
                         }
@@ -1359,6 +1410,7 @@ void game(){
         }
 
         // input = getChar();
+        inputStart:
         switch(input){
 
             case 0:
@@ -1367,6 +1419,7 @@ void game(){
                 //s/S down
             case 83:
                 input = 115;
+                goto inputStart;
                 break;
             case 115:
                 if (tickCount>fps*10){
@@ -1381,6 +1434,7 @@ void game(){
                 //w/W up
             case 87:
                 input = 119;
+                goto inputStart;
                 break;
             case 119:
                 if (tickCount>fps*5){
@@ -1392,6 +1446,7 @@ void game(){
                 //a/A left
             case 65:
                 input = 97;
+                goto inputStart;
                 break;
             case 97:
                 if (tickCount>fps*5){
@@ -1403,6 +1458,7 @@ void game(){
                 //d/D right
             case 68:
                 input = 100;
+                goto inputStart;
                 break;
             case 100:
                 if (tickCount>fps*5){
@@ -1414,6 +1470,7 @@ void game(){
                 //exit e/E
             case 69:
                 input = 101;
+                goto inputStart;
                 break;
             case 101:
                 // void startMenu();
@@ -1618,6 +1675,7 @@ void startMenu(){
         drawRect(ws.ws_row/2,ws.ws_col/2,ws.ws_row/4,ws.ws_col/4);
         input = getCharFork();
         //main menu functions
+        inputStart:
         switch(input){
             //Enter pressed
             case 10:
@@ -1691,10 +1749,12 @@ void startMenu(){
                 //up
                     case 87:
                         input = 119;
+                        goto inputStart;
                         break;
                         //down
                     case 83:
                         input = 115;
+                        goto inputStart;
                         break;
                     case 115:
 

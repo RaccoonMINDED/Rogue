@@ -1,16 +1,16 @@
-1
+0
 __________________________
 player
 playerX 71
-playerY 17
+playerY 7
 playerHP 100
-playerGold 5
-playerDMG 15
-playerLVL 2
-playerLevelProgress 5
-playerLevelMinReq 9
+playerGold 0
+playerDMG 20
+playerLVL 3
+playerLevelProgress 4
+playerLevelMinReq 13
 playerFloor 1
-playerRoom 5
+playerRoom 6
 __________________________
 rooms
 floor 1
@@ -61,12 +61,12 @@ object ^ 1 4 23 48 0
 object ^ 1 4 24 47 0
 object ^ 1 4 24 49 0
 object ^ 1 4 25 48 0
-object c 1 4 24 48 0
+object * 1 4 24 48 1
 object ^ 1 4 23 51 0
 object ^ 1 4 24 50 0
 object ^ 1 4 24 52 0
 object ^ 1 4 25 51 0
-object H 1 4 24 51 0
+object * 1 4 24 51 1
 object d 1 3 22 31 0
 object d 1 4 22 71 0
 object $ 1 5 16 71 0
@@ -77,8 +77,8 @@ object d 1 5 10 71 0
 __________________________
 enemies
 floor 1
-enemy s 1 4 28 40 0 6 15
-enemy z 1 4 28 71 0 4 31
-enemy z 1 4 28 71 -5 4 33
+enemy s 1 4 28 39 0 6 15
+enemy z 1 4 26 71 0 4 31
+enemy z 1 4 28 69 0 4 33
 __________________________
 THEEND

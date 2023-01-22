@@ -5,13 +5,7 @@ To play this game you need to install it in /home/yourname/.Rogue/ and execute l
 
 To download
 
-//todo
-
-!1.Need to add enemies and interactions(guideRoomNum 4)
-
-!2.Need to add shop(guideRoomNum 5)
-
-!3.End the guid text
+#todo
 
 4.Start doing random generating map
 
@@ -20,3 +14,10 @@ To download
 !6.Need to add stats
 
 7.Need to add achivements
+
+##DONE
+!1.Need to add enemies and interactions(guideRoomNum 4)
+
+!2.Need to add shop(guideRoomNum 5)
+
+!3.End the guid text
